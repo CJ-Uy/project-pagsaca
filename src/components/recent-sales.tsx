@@ -39,7 +39,9 @@ export function RecentSales() {
           <AvatarFallback>IN</AvatarFallback>
         </Avatar>
         <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Attached New Module 3</p>
+          <p className="text-sm font-medium leading-none">
+            Attached New Module 3
+          </p>
           <p className="text-sm text-muted-foreground">
             June 04, 2024 at 8:00 AM
           </p>
