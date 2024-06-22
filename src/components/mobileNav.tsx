@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu as MenuIcon } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const mainNavItems = [
   { label: "Home", path: "/" },
@@ -13,6 +14,9 @@ const mainNavItems = [
   { label: "My Plant Cells", path: "/plant-cells" },
 ];
 export default function MobileNav() {
+  const pathname = usePathname();
+  const isActive = (path: string) => path === pathname;
+
   const [open, setOpen] = useState(false);
 
   return (
@@ -31,6 +35,7 @@ export default function MobileNav() {
               <Button
                 key={index}
                 variant="link"
+                className={isActive(item.path) ? "text-green-500" : ""}
                 onClick={() => {
                   setOpen(false);
                 }}

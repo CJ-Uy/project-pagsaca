@@ -1,5 +1,5 @@
-import MainNav from "./mainNav";
-import MobileNav from "./mobileNav";
+import MainNav from "../mainNav";
+import MobileNav from "../mobileNav";
 
 export default function SiteHeader() {
   return (

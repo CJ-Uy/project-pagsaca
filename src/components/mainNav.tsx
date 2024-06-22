@@ -2,7 +2,7 @@
 
 import Link from "next/link"; // Import the Link component
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const mainNavItems = [
   { label: "Home", path: "/" },
@@ -12,7 +12,9 @@ const mainNavItems = [
 ];
 
 export default function MainNav() {
-  const [ selectedItem, setSelectedItem ] = useState("/");
+  const pathname = usePathname();
+  const isActive = (path: string) => path === pathname;
+
   return (
     <div className="mr-4 hidden gap-2 md:flex">
       {mainNavItems.map((item, index) => (
@@ -20,8 +22,7 @@ export default function MainNav() {
           <Button
             key={index}
             variant="link"
-            className={selectedItem === item.path ? "text-green-500" : ""}
-            onClick={() => setSelectedItem(item.path)}
+            className={isActive(item.path) ? "text-green-500" : ""}
           >
             {item.label}
           </Button>
