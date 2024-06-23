@@ -1,5 +1,3 @@
-import { OverviewGraph } from "@/components/dashboard/overview-graph";
-import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,6 +8,9 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { VoltageSummaryGraph } from "@/components/dashboard/voltage-summary-graph";
+import { WaterLevelSummaryGraph } from "@/components/dashboard/water-level-summary-graph";
+import { RecentActivity } from "@/components/dashboard/recent-activity";
 
 export default function page() {
   return (
@@ -26,9 +27,7 @@ export default function page() {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics" disabled>
-              Analytics
-            </TabsTrigger>
+            <TabsTrigger value="activity">Activity</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -131,25 +130,35 @@ export default function page() {
                 </CardContent>
               </Card>
             </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-8">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>Voltage</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <OverviewGraph />
+                  <VoltageSummaryGraph />
                 </CardContent>
               </Card>
-              <Card className="col-span-4 md:col-span-3">
+              <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
-                  <CardDescription>Recent automated activities</CardDescription>
+                  <CardTitle>Water Levels</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <RecentActivity />
+                <CardContent className="pl-2">
+                  <WaterLevelSummaryGraph />
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+          <TabsContent value="activity" className="space-y-4">
+            <Card className="col-span-4 md:col-span-3">
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>Recent automated activities</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <RecentActivity />
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
