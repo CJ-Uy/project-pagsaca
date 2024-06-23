@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model users {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  setups    setups[]
+}
+
+model setups {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    String
+  owner     users     @relation(fields: [userId], references: [id])
+  modules   modules[]
+}
+
+model modules {
+  id         String           @id @default(cuid())
+  name       String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  setupId    String
+  setup      setups           @relation(fields: [setupId], references: [id])
+  voltage    voltageData[]
+  waterLevel waterLevelData[]
+}
+
+model voltageData {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  moduleId  String
+  module    modules  @relation(fields: [moduleId], references: [id])
+  voltage   Float
+}
+
+model waterLevelData {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  moduleId   String
+  module     modules  @relation(fields: [moduleId], references: [id])
+  waterLevel Float
+}
