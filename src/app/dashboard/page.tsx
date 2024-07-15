@@ -20,9 +20,6 @@ export default function page() {
           <h2 className="text-3xl font-bold tracking-tight">
             Hi, Welcome back 👋
           </h2>
-          <div className="hidden items-center space-x-2 md:flex">
-            <Button>Download</Button>
-          </div>
         </div>
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
@@ -75,32 +72,32 @@ export default function page() {
                 <CardContent>
                   <div className="text-2xl font-bold">No Current Issues</div>
                   <p className="text-xs text-muted-foreground">
-                    0 Critical Issues | 0 Warnings
+                    No Warnings or Issues
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Increased Growth Rate
+                    Server Status
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
                     className="size-5"
                   >
                     <path
-                      fillRule="evenodd"
-                      d="M12.577 4.878a.75.75 0 0 1 .919-.53l4.78 1.281a.75.75 0 0 1 .531.919l-1.281 4.78a.75.75 0 0 1-1.449-.387l.81-3.022a19.407 19.407 0 0 0-5.594 5.203.75.75 0 0 1-1.139.093L7 10.06l-4.72 4.72a.75.75 0 0 1-1.06-1.061l5.25-5.25a.75.75 0 0 1 1.06 0l3.074 3.073a20.923 20.923 0 0 1 5.545-4.931l-3.042-.815a.75.75 0 0 1-.53-.919Z"
-                      clipRule="evenodd"
-                    />
+                      fill="currentColor"
+                      d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9zm0 8h1v-2H9zm0 8h1v-2H9zM5 3v2h2V3zm0 8v2h2v-2zm0 8v2h2v-2z"
+                    ></path>
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+30%</div>
+                  <div className="text-2xl font-bold">ONLINE</div>
                   <p className="text-xs text-muted-foreground">
-                    from base growth rate
+                    No Warnings or Issues
                   </p>
                 </CardContent>
               </Card>
@@ -123,7 +120,7 @@ export default function page() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Online</div>
+                  <div className="text-2xl font-bold">ONLINE</div>
                   <p className="text-xs text-muted-foreground">
                     No Warnings or Issues
                   </p>
