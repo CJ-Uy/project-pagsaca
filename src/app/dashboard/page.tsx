@@ -50,7 +50,7 @@ export default function page() {
                 <CardContent>
                   <div className="text-2xl font-bold">1 Active Setup</div>
                   <p className="text-xs text-muted-foreground">
-                    3 Total Modules
+                    1 Control Hat & 2 Plant Modules
                   </p>
                 </CardContent>
               </Card>

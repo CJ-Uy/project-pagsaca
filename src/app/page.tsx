@@ -15,7 +15,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-import Image from "next/image";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Home() {
   return (
@@ -73,26 +73,95 @@ export default function Home() {
           <CarouselItem>
             <Card className="min-h-[50vh]">
               <CardHeader>
-                <CardTitle>POSTER</CardTitle>
-                <CardDescription>WHAT is Project PAGSACA?</CardDescription>
+                <CardTitle>MAIN CONCEPTS</CardTitle>
+                <CardDescription></CardDescription>
               </CardHeader>
               <CardContent className="flex items-center justify-center">
-                <p>HELLO</p>
+                <Tabs
+                  defaultValue="vertical_farming"
+                  className="flex-col items-center justify-center"
+                >
+                  <TabsList>
+                    {/* For DESKTOP */}
+                    <TabsTrigger
+                      value="vertical_farming"
+                      className="hidden xl:block"
+                    >
+                      Vertical Farming
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="iot_automation"
+                      className="hidden xl:block"
+                    >
+                      IoT & Automation
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="electroculture"
+                      className="hidden xl:block"
+                    >
+                      Electroculture
+                    </TabsTrigger>
+                    <TabsTrigger value="pmfc" className="hidden xl:block">
+                      Plant Microbial Fuel Cells
+                    </TabsTrigger>
+                    <TabsTrigger value="osc" className="hidden xl:block">
+                      Organic Solar Cells
+                    </TabsTrigger>
+                    <TabsTrigger value="web_app" className="hidden xl:block">
+                      Full Stack Web Application
+                    </TabsTrigger>
+
+                    {/* FOR MOBILE */}
+                    <TabsTrigger value="vertical_farming" className="xl:hidden">
+                      VF
+                    </TabsTrigger>
+                    <TabsTrigger value="iot_automation" className="xl:hidden">
+                      IoT
+                    </TabsTrigger>
+                    <TabsTrigger value="electroculture" className="xl:hidden">
+                      Electroculture
+                    </TabsTrigger>
+                    <TabsTrigger value="pmfc" className="xl:hidden">
+                      PMFC
+                    </TabsTrigger>
+                    <TabsTrigger value="osc" className="xl:hidden">
+                      OSC
+                    </TabsTrigger>
+                    <TabsTrigger value="web_app" className="xl:hidden">
+                      web app
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="vertical_farming">
+                    Vertical Farming
+                  </TabsContent>
+                  <TabsContent value="iot_automation">
+                    IoT Systems & Automation
+                  </TabsContent>
+                  <TabsContent value="electroculture">
+                    IoT Systems & Automation
+                  </TabsContent>
+                  <TabsContent value="pmfc">
+                    Plant Microbial Fuel Cells (PMFC)
+                  </TabsContent>
+                  <TabsContent value="osc">
+                    Organic Solar Cells (OSCs)
+                  </TabsContent>
+                  <TabsContent value="web_app">
+                    Full Stack Web Application
+                  </TabsContent>
+                </Tabs>
               </CardContent>
             </Card>
           </CarouselItem>
           <CarouselItem>
             <Card className="min-h-[50vh]">
               <CardHeader>
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
+                <CardTitle>BENEFITS</CardTitle>
               </CardHeader>
               <CardContent>
                 <p>Card Content</p>
               </CardContent>
-              <CardFooter>
-                <p>Card Footer</p>
-              </CardFooter>
             </Card>
           </CarouselItem>
         </CarouselContent>

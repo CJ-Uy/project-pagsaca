@@ -9,7 +9,8 @@ import { usePathname } from "next/navigation";
 
 const mainNavItems = [
   { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
+  { label: "Poster", path: "/poster" },
+  { label: "Paper", path: "/paper" },
   { label: "Dashboard", path: "/dashboard" },
   { label: "My Plant Cells", path: "/plant-cells" },
 ];
