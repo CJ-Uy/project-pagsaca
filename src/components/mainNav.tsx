@@ -22,7 +22,11 @@ export default function MainNav() {
           <Button
             key={index}
             variant="link"
-            className={isActive(item.path) ? "text-green-500" : ""}
+            className={
+              isActive(item.path)
+                ? "text-green-500 font-bold text-lg"
+                : "font-bold text-lg"
+            }
           >
             {item.label}
           </Button>

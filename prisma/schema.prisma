@@ -2,6 +2,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "ERD.png"
+}
+
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
@@ -29,28 +34,37 @@ model setups {
 }
 
 model modules {
-  id         String           @id @default(cuid())
-  name       String
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
-  setupId    String
-  setup      setups           @relation(fields: [setupId], references: [id])
-  voltage    voltageData[]
-  waterLevel waterLevelData[]
+  id               String             @id @default(cuid())
+  name             String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  setupId          String
+  setup            setups             @relation(fields: [setupId], references: [id])
+  soilMoistureData soilMoistureData[]
+  voltage          voltageData[]
+  waterLevel       waterLevelData[]
 }
 
 model voltageData {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  moduleId   String?
-  data       Float?
-  module     modules? @relation(fields: [moduleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  moduleId  String
+  data      Float
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  module    modules  @relation(fields: [moduleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model waterLevelData {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  moduleId   String?
-  data       Int?     @db.SmallInt
-  module     modules? @relation(fields: [moduleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  moduleId  String
+  data      Int      @db.SmallInt
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  module    modules  @relation(fields: [moduleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model soilMoistureData {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  moduleId  String
+  data      Int      @db.SmallInt
+  modules   modules  @relation(fields: [moduleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

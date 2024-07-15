@@ -6,28 +6,33 @@ const main = async () => {
   const user = await prisma.users.create({
     data: {
       name: "Project PAGSACA",
-      email: "testemail@gmail.com",
+      email: "project@pagsaca.com",
       password: "password",
     },
   });
+  console.log("User created: ", user);
 
   const setup = await prisma.setups.create({
     data: {
-      name: "Setup 1",
+      name: "Demo Setup",
       userId: user.id,
     },
   });
-
-  const module = await prisma.modules.create({
-    data: {
-      name: "Module 1",
-      setupId: setup.id,
-    },
-  });
-
-  console.log("User created: ", user);
   console.log("Setup created: ", setup);
-  console.log("Module created: ", module);
+
+  const module = await prisma.modules.createMany({
+    data: [
+      {
+        name: "Module 1",
+        setupId: setup.id,
+      },
+      {
+        name: "Module 2",
+        setupId: setup.id,
+      },
+    ],
+  });
+  console.log("Modules created: ", module);
 };
 
 main();

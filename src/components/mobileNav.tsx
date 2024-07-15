@@ -35,7 +35,11 @@ export default function MobileNav() {
               <Button
                 key={index}
                 variant="link"
-                className={isActive(item.path) ? "text-green-500" : ""}
+                className={
+                  isActive(item.path)
+                    ? "text-green-500 font-bold text-2xl pt-10"
+                    : "font-bold text-2xl pt-10"
+                }
                 onClick={() => {
                   setOpen(false);
                 }}

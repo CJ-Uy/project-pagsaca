@@ -10,21 +10,33 @@ const main = async () => {
     for (let i = 0; i < 100; i++) {
       const voltage = await prisma.voltageData.create({
         data: {
-          createdAt: faker.date.recent({days: 14, refData: currentDate}),
+          createdAt: faker.date.recent({ days: 14, refData: currentDate }),
           moduleId: module.id,
-          voltage: faker.number.float({ min: 0, max: 1 }),
+          data: faker.number.float({ min: 0, max: 1 }),
         },
       });
       console.log(voltage);
 
       const waterLevel = await prisma.waterLevelData.create({
         data: {
-          createdAt: faker.date.recent({days: 14, refData: currentDate}),
+          createdAt: faker.date.recent({ days: 14, refData: currentDate }),
           moduleId: module.id,
-          waterLevel: faker.number.int({ min: 0, max: 100 }),
+          data: faker.number.int({ min: 0, max: 100 }),
         },
       });
       console.log(waterLevel);
+
+      const soilMoisture = await prisma.soilMoistureData.create({
+        data: {
+          createdAt: faker.date.recent({
+            days: 14,
+            refData: currentDate,
+          }),
+          moduleId: module.id,
+          data: faker.number.int({ min: 0, max: 100 }),
+        },
+      });
+      console.log(soilMoisture);
     }
   }
 };

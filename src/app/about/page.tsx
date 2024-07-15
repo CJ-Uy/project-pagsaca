@@ -1,7 +1,13 @@
 const about = () => {
   return (
-    <div>about</div>
-  )
+    <div>
+      <img
+        src="/images/IMWM-poster.png"
+        alt="Project PAGSACA Poster"
+        width="100%"
+      />
+    </div>
+  );
 }
 
 export default about

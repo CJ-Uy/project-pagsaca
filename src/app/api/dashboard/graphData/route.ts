@@ -15,7 +15,7 @@ export async function GET() {
     },
     select: {
       createdAt: true,
-      voltage: true,
+      data: true,
     },
   });
 
@@ -29,7 +29,7 @@ export async function GET() {
     },
     select: {
       createdAt: true,
-      waterLevel: true,
+      data: true,
     },
   });
 
@@ -46,7 +46,7 @@ export async function GET() {
         count: 0,
       };
     }
-    averageVoltage[date].totalVoltage += entry.voltage;
+    averageVoltage[date].totalVoltage += entry.data;
     averageVoltage[date].count++;
   });
 
@@ -70,7 +70,7 @@ export async function GET() {
         count: 0,
       };
     }
-    averageWaterLevel[date].totalWaterLevel += entry.waterLevel;
+    averageWaterLevel[date].totalWaterLevel += entry.data;
     averageWaterLevel[date].count++;
   });
 
