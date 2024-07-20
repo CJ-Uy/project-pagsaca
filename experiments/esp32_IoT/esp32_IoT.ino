@@ -20,7 +20,7 @@ const int voltagePinM1 = 19;
 const int voltagePinM2 = 21;
 
 const String module_1_id = "cly1ihlcx0004mx9gsjt4u0xj";
-const String module_2_id = "cly1ol58e0000sotnmkntia7k";
+const String module_2_id = "cly1ol58e0000sotnmkntia7k"; 
 
 const String supabase_url = "https://dkecsjreyxhkpoomydze.supabase.co";
 const String annon_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZWNzanJleXhoa3Bvb215ZHplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg4NjkzNTIsImV4cCI6MjAzNDQ0NTM1Mn0.POhjqUdTsCpQ02pWq-mP1ZwYfuWmaApckavxrG5PbXU";
@@ -29,7 +29,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("");
   pinMode(waterSensorPinM1, INPUT);
-  pinMode(waterPumpRelaySwitch, OUTPUT);
+  pinMode(waterPumpRelaySwitchM1, OUTPUT);
 
   // Connecting to Wi-Fi
   Serial.print("Connecting to WiFi");
@@ -63,7 +63,7 @@ void loop() {
     Serial.println("Water Level INSUFFICIENT in Module 1");
     // Turn pump on
     Serial.println("Turning Pump On for Module 1...");
-    digitalWrite(waterPumpRelaySwitch, HIGH);
+    digitalWrite(waterPumpRelaySwitchM1, HIGH);
     delay(3000); // set how long the pump should be on
     digitalWrite(waterPumpRelaySwitch, LOW);
     Serial.println("Turning Pump Off for Module 1...");
@@ -76,7 +76,7 @@ void loop() {
     Serial.println("Water Level INSUFFICIENT in Module 2");
     // Turn pump on
     Serial.println("Turning Pump On for Module 2...");
-    digitalWrite(waterPumpRelaySwitch, HIGH);
+    digitalWrite(waterPumpRelaySwitchM1, HIGH);
     delay(3000); // set how long the pump should be on
     digitalWrite(waterPumpRelaySwitch, LOW);
     Serial.println("Turning Pump Off for Module 2...");

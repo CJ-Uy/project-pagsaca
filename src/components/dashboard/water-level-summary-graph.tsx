@@ -34,12 +34,7 @@ export function WaterLevelSummaryGraph() {
         <XAxis dataKey="date" />
         <YAxis />
         <CartesianGrid strokeDasharray="3 3" />
-        <Line
-          type="monotone"
-          dataKey="average"
-          stroke="blue"
-          strokeWidth={3}
-        />
+        <Line type="monotone" dataKey="average" stroke="blue" strokeWidth={3} />
         <Tooltip />
         <Legend />
       </LineChart>

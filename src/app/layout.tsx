@@ -1,6 +1,6 @@
 import "./globals.css";
 import localFont from "next/font/local";
-import SiteHeader from "@/components/dashboard/siteHeader";
+import SiteHeader from "@/components/siteHeader";
 
 const nexaFont = localFont({
   src: [
