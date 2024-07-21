@@ -1,3 +1,5 @@
+const int PMFC_ControlPin = 3;
+
 // Module 1 Pins
 const int M1_PMFCPin = A0;
 const int M1_WaterPin = A1;
@@ -14,6 +16,7 @@ const int M2_FanPin = 10;
 
 void setup() {
   Serial.begin(9600);
+  pinMode(PMFC_ControlPin, INPUT);
 
   // Module 1 Setup
   pinMode(M1_PMFCPin, INPUT);
@@ -28,21 +31,6 @@ void setup() {
   pinMode(M2_SoilMoisturePin, INPUT);
   pinMode(M2_FanPin, OUTPUT);
   pinMode(M2_LEDPin, OUTPUT);
-
-  // Connecting to Wi-Fi
-  Serial.print("Connecting to WiFi");
-  WiFi.begin(ssid, psswd);
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(100);
-    Serial.print(".");
-  }
-  Serial.println("Connected!");
-
-  db.begin(supabase_url, annon_key);
-  Serial.println(" ");
-  Serial.println(" ");
-  Serial.println(" ");
 }
 
 void loop() {
@@ -52,38 +40,38 @@ void loop() {
   Serial.println("\n----- Module 1 -----");
   
   Serial.print("Reading Module 1 PMFC: ");
-  float M1_PMFC = getMedianOfAnalogReadings(M1_PMFCPin);
-  Serial.println(M1_PMFC);
+  float M1_PMFC = floatMap(getMedianOfAnalogReadings(M1_PMFCPin), 0, 1023, 0, 5); // Idk why it doesnt go down to 0
+  Serial.println(String(M1_PMFC) + "V");
 
   Serial.print("Reading Module 1 Water Level: ");
-  float M1_WaterLevel = getMedianOfAnalogReadings(M1_WaterPin);
-  Serial.println(M1_WaterLevel);
+  float M1_WaterLevel = floatMap(getMedianOfAnalogReadings(M1_WaterPin), 6, 1023, 0, 4); // 6 to 1023 Analog Read to 0 to 4 cm 
+  Serial.println(String(M1_WaterLevel) + " cm");
 
   Serial.print("Reading Module 1 Soil Moisture: ");
-  float M1_SoilMoisture = getMedianOfAnalogReadings(M1_SoilMoisturePin);
-  Serial.println(M1_SoilMoisture);
+  float M1_SoilMoisture = floatMap(getMedianOfAnalogReadings(M1_SoilMoisturePin), 1013, 7, 0, 100); // 1013 to 7 Analog Read to 0 to 100 %
+  Serial.println(String(M1_SoilMoisture) + " %");
 
-  // Module 2 
-  Serial.println("\n----- Module 2 -----");
+  // // Module 2 
+  // Serial.println("\n----- Module 2 -----");
   
-  Serial.print("Reading Module 2 PMFC: ");
-  float M2_PMFC = getMedianOfAnalogReadings(M2_PMFCPin);
-  Serial.println(M2_PMFC);
+  // Serial.print("Reading Module 2 PMFC: ");
+  // float M2_PMFC = getMedianOfAnalogReadings(M2_PMFCPin);
+  // Serial.println(M2_PMFC);
 
-  Serial.print("Reading Module 2 Water Level: ");
-  float M2_WaterLevel = getMedianOfAnalogReadings(M2_WaterPin);
-  Serial.println(M1_WaterLevel);
+  // Serial.print("Reading Module 2 Water Level: ");
+  // float M2_WaterLevel = getMedianOfAnalogReadings(M2_WaterPin);
+  // Serial.println(M1_WaterLevel);
 
-  Serial.print("Reading Module 2 Soil Moisture: ");
-  float M2_SoilMoisture = getMedianOfAnalogReadings(M2_SoilMoisturePin);
-  Serial.println(M2_SoilMoisture);
+  // Serial.print("Reading Module 2 Soil Moisture: ");
+  // float M2_SoilMoisture = getMedianOfAnalogReadings(M2_SoilMoisturePin);
+  // Serial.println(M2_SoilMoisture);
 
   // Upload data to database
   Serial.println("\n----- Uploading to Database -----");
 
 
   // Run Electroculture 5 minutes
-  delay(300000); // 5 minutes delay
+  delay(3000); // 5 minutes delay
 }
 
 float getMedianOfAnalogReadings(int pin){
@@ -114,6 +102,10 @@ void insertionSort(int arr[], int n) {
         }
         arr[j + 1] = key;
     }
+}
+
+float floatMap(int num, int old_min, int old_max, int new_min, int new_max){
+  return (float)(num - old_min) * (new_max - new_min) / (old_max - old_min) + new_min;
 }
 
 String uploadData(String tableName, String mdouleId, float data){
