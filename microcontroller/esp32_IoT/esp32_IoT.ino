@@ -8,16 +8,8 @@ HTTPClient https;
 WiFiClientSecure client;
 
 // put your WiFi credentials (SSID and Password) here
-const char *ssid = "PLDTHOMEFIBRz8Qe6_Guest";
-const char *psswd = "Decodeco2";
-
-const int waterSensorPinM1 = 35; 
-const int waterPumpRelaySwitchM1 = 32;
-const int waterSensorPinM2 = 33; 
-const int waterPumpRelaySwitchM2 = 25;
-
-const int voltagePinM1 = 19; 
-const int voltagePinM2 = 21;
+const char *ssid = "CJ-Uy";
+const char *psswd = "1234567890";
 
 const String module_1_id = "cly1ihlcx0004mx9gsjt4u0xj";
 const String module_2_id = "cly1ol58e0000sotnmkntia7k"; 
@@ -27,10 +19,8 @@ const String annon_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhY
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("");
-  pinMode(waterSensorPinM1, INPUT);
-  pinMode(waterPumpRelaySwitchM1, OUTPUT);
-
+  Serial2.begin(9600); // For communication with Arduino
+  
   // Connecting to Wi-Fi
   Serial.print("Connecting to WiFi");
   WiFi.begin(ssid, psswd);
@@ -42,96 +32,59 @@ void setup() {
   Serial.println("Connected!");
 
   db.begin(supabase_url, annon_key);
-  Serial.println(" ");
-  Serial.println(" ");
-  Serial.println(" ");
 }
 
 void loop() {
-  // Reading Water Sensor
-  int waterLevelM1 = analogRead(waterSensorPinM1);
-  int waterLevelM2 = analogRead(waterSensorPinM2);
-
-  float voltageM1 = analogRead(voltagePinM1);
-  float voltageM2 = analogRead(voltagePinM2);
-
-  Serial.print("Reading from water sensor: ");
-  Serial.println(waterLevelM1);
-
-  // Water Pump check in Module 1 
-  if(waterLevelM1 < 1500){
-    Serial.println("Water Level INSUFFICIENT in Module 1");
-    // Turn pump on
-    Serial.println("Turning Pump On for Module 1...");
-    digitalWrite(waterPumpRelaySwitchM1, HIGH);
-    delay(3000); // set how long the pump should be on
-    digitalWrite(waterPumpRelaySwitch, LOW);
-    Serial.println("Turning Pump Off for Module 1...");
-  } else {
-    Serial.println("Water Level Sufficient in Module 1");
+  if (Serial2.available()) {
+    String receivedData = Serial2.readStringUntil('\n');
+    receivedData.trim();
+    
+    if (receivedData.startsWith("DATA:")) {
+      processData(receivedData.substring(5));
+    } else if (receivedData.startsWith("EVENT:")) {
+      processEvent(receivedData.substring(6));
+    }
   }
+}
 
-  // Water Pump check in Module 2
-  if(waterLevelM2 < 1500){
-    Serial.println("Water Level INSUFFICIENT in Module 2");
-    // Turn pump on
-    Serial.println("Turning Pump On for Module 2...");
-    digitalWrite(waterPumpRelaySwitchM1, HIGH);
-    delay(3000); // set how long the pump should be on
-    digitalWrite(waterPumpRelaySwitch, LOW);
-    Serial.println("Turning Pump Off for Module 2...");
-  } else {
-    Serial.println("Water Level Sufficient in Module 2");
-  }
-
-  // Upload this data to the database
-  Serial.println("Attempting to insert data to database... ");
-    // Uploading it to the module 1 id
+void processData(String data) {
+  int firstComma = data.indexOf(',');
+  int secondComma = data.indexOf(',', firstComma + 1);
+  int thirdComma = data.indexOf(',', secondComma + 1);
   
-  String waterLevelDataM1 = "{ \"moduleId\": \"" + String(module_1_id) + "\", \"data\": " + String(waterLevelM1) + " }";
-  String waterLevelDataM1 = "{ \"moduleId\": \"" + String(module_2_id) + "\", \"data\": " + String(waterLevelM2) + " }";
-  String voltageDataM1 = "{ \"moduleId\": \"cly1ihlcx0004mx9gsjt4u0xj\", \"data\": " + String(voltageM1) + " }";
-  String voltageDataM2 = "{ \"moduleId\": \"cly1ihlcx0004mx9gsjt4u0xj\", \"data\": " + String(voltageM2) + " }";
-
-  // Insert operation
-  int httpCode
-
-  httpCode = db.insert("waterLevelData", waterLevelDataM1, false);
-  if (httpCode == 201) {
-    Serial.println("Successfully Uploaded Module 1 Water Data");
-  } else {
-    Serial.print("Failed to Upload Error Code: ");
-    Serial.println(httpCode);
+  if (firstComma != -1 && secondComma != -1 && thirdComma != -1) {
+    float M1_PMFC = data.substring(0, firstComma).toFloat();
+    float M1_WaterLevel = data.substring(firstComma + 1, secondComma).toFloat();
+    float M1_SoilMoisture = data.substring(secondComma + 1, thirdComma).toFloat();
+    float M2_PMFC = data.substring(thirdComma + 1, data.indexOf(',', thirdComma + 1)).toFloat();
+    float M2_WaterLevel = data.substring(data.indexOf(',', thirdComma + 1) + 1, data.lastIndexOf(',')).toFloat();
+    float M2_SoilMoisture = data.substring(data.lastIndexOf(',') + 1).toFloat();
+    
+    uploadData("voltageData", module_1_id, M1_PMFC);
+    uploadData("voltageData", module_2_id, M2_PMFC);
+    uploadData("waterLevelData", module_1_id, M1_WaterLevel);
+    uploadData("waterLevelData", module_2_id, M2_WaterLevel);
+    uploadData("soilMoistureData", module_1_id, M1_SoilMoisture);
+    uploadData("soilMoistureData", module_2_id, M2_SoilMoisture);
   }
+}
 
-  httpCode = db.insert("waterLevelData", waterLevelDataM1, false);
+void processEvent(String event) {
+  String dataJSON = "{ \"moduleId\": \"" + (event.startsWith("M1") ? module_1_id : module_2_id) + "\", \"event\": \"" + event + "\" }";
+  int httpCode = db.insert("activityLog", dataJSON, false);
   if (httpCode == 201) {
-    Serial.println("Successfully Uploaded Module 2 Water Data");
+    Serial.println("Successfully logged event: " + event);
   } else {
-    Serial.print("Failed to Upload Error Code: ");
-    Serial.println(httpCode);
+    Serial.println("Failed to log event. Error code: " + String(httpCode));
   }
+}
 
-  httpCode = db.insert("waterLevelData", voltageDataM1, false);
+void uploadData(String tableName, String moduleId, float data) {
+  String dataJSON = "{ \"moduleId\": \"" + moduleId + "\", \"data\": " + String(data) + " }";
+  int httpCode = db.insert(tableName, dataJSON, false);
   if (httpCode == 201) {
-    Serial.println("Successfully Uploaded Module 1 Water Data");
+    Serial.println("Successfully uploaded data to " + tableName);
   } else {
-    Serial.print("Failed to Upload Error Code: ");
-    Serial.println(httpCode);
+    Serial.println("Failed to upload data to " + tableName + ". Error code: " + String(httpCode));
   }
-
-  httpCode = db.insert("waterLevelData", voltageDataM2, false);
-  if (httpCode == 201) {
-    Serial.println("Successfully Uploaded Module 2 Water Data");
-  } else {
-    Serial.print("Failed to Upload Error Code: ");
-    Serial.println(httpCode);
-  }
-  Serial.println("Starting 5 Minute Delay");
-  
-  Serial.println(" ");
-  Serial.println(" ");
-  Serial.println(" ");
-
-  delay(300000);
 }

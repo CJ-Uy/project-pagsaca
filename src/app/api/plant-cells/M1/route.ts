@@ -7,11 +7,7 @@ export async function GET() {
 
   const voltageData = await prisma.voltageData.findMany({
     where: {
-      module: {
-        setup: {
-          userId: user.id,
-        },
-      },
+      moduleId: "clyobkzyd0003nwedbirla2c9",
     },
     select: {
       createdAt: true,
@@ -21,11 +17,7 @@ export async function GET() {
 
   const waterLevelData = await prisma.waterLevelData.findMany({
     where: {
-      module: {
-        setup: {
-          userId: user.id,
-        },
-      },
+      moduleId: "clyobkzyd0003nwedbirla2c9",
     },
     select: {
       createdAt: true,
@@ -35,11 +27,7 @@ export async function GET() {
 
   const soilMoistureLevelData = await prisma.soilMoistureData.findMany({
     where: {
-      module: {
-        setup: {
-          userId: user.id,
-        },
-      },
+      moduleId: "clyobkzyd0003nwedbirla2c9",
     },
     select: {
       createdAt: true,
@@ -147,17 +135,21 @@ export async function GET() {
       ...entry,
       date: entry.date.format("MMM DD"), // Format date back to "MMM DD"
     }));
-  
-    const sortedSoilMoisture = Object.keys(averageSoilMoisture)
-      .map((date) => ({
-        date: dayjs(date, "MMM DD"), // Parse date using Day.js
-        ...averageSoilMoisture[date],
-      }))
-      .sort((a, b) => a.date.diff(b.date))
-      .map((entry) => ({
-        ...entry,
-        date: entry.date.format("MMM DD"), // Format date back to "MMM DD"
-      }));
-  
-  return NextResponse.json({ sortedVoltage, sortedWaterLevel, sortedSoilMoisture });
+
+  const sortedSoilMoisture = Object.keys(averageSoilMoisture)
+    .map((date) => ({
+      date: dayjs(date, "MMM DD"), // Parse date using Day.js
+      ...averageSoilMoisture[date],
+    }))
+    .sort((a, b) => a.date.diff(b.date))
+    .map((entry) => ({
+      ...entry,
+      date: entry.date.format("MMM DD"), // Format date back to "MMM DD"
+    }));
+
+  return NextResponse.json({
+    sortedVoltage,
+    sortedWaterLevel,
+    sortedSoilMoisture,
+  });
 }

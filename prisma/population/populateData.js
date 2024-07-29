@@ -24,7 +24,10 @@ function generateTimestampzArray(intervalMinutes) {
 console.time("timer");
 
 const prisma = new PrismaClient();
-const modules = await prisma.modules.findMany();
+const module = await prisma.modules.findFirst({
+  where: { id: "clyobkzyd0003nwedbirla2c9" },
+});
+const modules = [module];
 const readingTimeStamps = generateTimestampzArray(60); // Read data from the ESP32 every 60 minutes
 
 async function performTransaction(
@@ -58,31 +61,31 @@ async function performTransaction(
       console.log(waterLevelData);
 
       // Create soil moisture data
-      const soilMoistureData = await prisma.soilMoistureData.create({
-        data: {
-          createdAt: date,
-          moduleId: module.id,
-          data: soilMoisture,
-        },
-      });
-      console.log(soilMoistureData);
+      // const soilMoistureData = await prisma.soilMoistureData.create({
+      //   data: {
+      //     createdAt: date,
+      //     moduleId: module.id,
+      //     data: soilMoisture,
+      //   },
+      // });
+      // console.log(soilMoistureData);
 
       // Watering event
-      if (soilMoisture < 50) {
-        const wateringAmount = faker.number.float({ min: 0.1, max: 0.3 });
-        waterLevel += wateringAmount;
-        soilMoisture = Math.min(100, soilMoisture + 30);
+      // if (soilMoisture < 50) {
+      //   const wateringAmount = faker.number.float({ min: 0.1, max: 0.3 });
+      //   waterLevel += wateringAmount;
+      //   soilMoisture = Math.min(100, soilMoisture + 30);
 
-        const activity = await prisma.activityLog.create({
-          data: {
-            createdAt: date,
-            moduleId: module.id,
-            action: "Watered",
-            description: `Added ${wateringAmount.toFixed(2)} cm of water`,
-          },
-        });
-        console.log(activity);
-      }
+      //   const activity = await prisma.activityLog.create({
+      //     data: {
+      //       createdAt: date,
+      //       moduleId: module.id,
+      //       action: "Watered",
+      //       description: `Added ${wateringAmount.toFixed(2)} cm of water`,
+      //     },
+      //   });
+      //   console.log(activity);
+      // }
 
       const readActivity = await prisma.activityLog.create({
         data: {

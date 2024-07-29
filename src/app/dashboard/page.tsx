@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VoltageSummaryGraph } from "@/components/dashboard/voltage-summary-graph";
 import { WaterLevelSummaryGraph } from "@/components/dashboard/water-level-summary-graph";
+import { SoilMoistureSummaryGraph } from "@/components/dashboard/soil-moisture-summary-graph";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 
 export default function page() {
@@ -128,7 +129,7 @@ export default function page() {
               </Card>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-8">
-              <Card className="col-span-4">
+              <Card className="col-span-8">
                 <CardHeader>
                   <CardTitle>Voltage</CardTitle>
                 </CardHeader>
@@ -142,6 +143,14 @@ export default function page() {
                 </CardHeader>
                 <CardContent className="pl-2">
                   <WaterLevelSummaryGraph />
+                </CardContent>
+              </Card>
+              <Card className="col-span-4">
+                <CardHeader>
+                  <CardTitle>Soil Moisture</CardTitle>
+                </CardHeader>
+                <CardContent className="pl-2">
+                  <SoilMoistureSummaryGraph />
                 </CardContent>
               </Card>
             </div>

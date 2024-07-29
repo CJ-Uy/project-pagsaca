@@ -1,6 +1,5 @@
 #include <SoftwareSerial.h>
 #include "IRremote.hpp"
-#include <avr/wdt.h>
 
 // Config Values
 const int readingInterval = 600000; // Every 10 Minutes
@@ -17,10 +16,10 @@ const int RX_Pin = 1;
 SoftwareSerial espSerial(RX_Pin, TX_Pin);
 
 // IR Receiver Values 
-const int IR_ReceiverPin = 2;
+const int IR_ReceiverPin = 11;
 unsigned long previousMillis = 0; // Simulate an asynchronous function
-bool buttonStates[10] = {false}; // Save 10 button states and set them all to false first (1-9 black buttons)
-const int autoStateLEDPin = 13;
+bool buttonStates[10] = {false,false,false,false,false,false,false,false,false,false}; // Save 10 button states and set them all to false first (1-9 black buttons)
+const int autoStateLEDPin = 12;
 bool autoState = false;
 
 unsigned long M1_PumpStartTime = 0;
@@ -37,21 +36,27 @@ bool isElectrocultureActiveM2 = false;
 const int M1_PMFCPin = A0;
 const int M1_WaterPin = A1;
 const int M1_SoilMoisturePin = A2;
-const int M1_LEDPin = 10;
-const int M1_FanPin = 9;
-const int M1_WaterPumpPin = 8;
+const int M1_LEDPin = 3;
+const int M1_FanPin = 4;
+const int M1_WaterPumpPin = 5;
 
 // Module 2 Pins
 const int M2_PMFCPin = A3;
 const int M2_WaterPin = A4;
 const int M2_SoilMoisturePin = A5;
-const int M2_WaterPumpPin = 7;
 const int M2_LEDPin = 6;
-const int M2_FanPin = 5;
+const int M2_FanPin = 7;
+const int M2_WaterPumpPin = 8;
 
 void setup() {
-  Serial.begin(115200); // Start Console
+  Serial.begin(19200); // Start Console
   espSerial.begin(9600); // Communication serial with esp32
+
+  Serial.println("HELLO");
+  Serial.println("HELLO");
+  Serial.println("");
+  Serial.println("");
+  Serial.println("");
 
   IrReceiver.begin(IR_ReceiverPin, ENABLE_LED_FEEDBACK); // Initialize IR receiver
 
@@ -70,9 +75,7 @@ void setup() {
   pinMode(M2_FanPin, OUTPUT);
   pinMode(M2_LEDPin, OUTPUT);
   pinMode(M2_WaterPumpPin, OUTPUT);
-
-  // Watchdog timer with 8-second timeout
-  wdt_enable(WDTO_8S);  
+  pinMode(autoStateLEDPin, OUTPUT);
 }
 
 void loop() {
@@ -234,6 +237,7 @@ void loop() {
   // If IR remote was clicked
   if (IrReceiver.decode()) {
     uint16_t command = IrReceiver.decodedIRData.command;
+    Serial.println(command);
     switch (command) {
       // Row 1
       case 69: // CH-
@@ -294,13 +298,13 @@ void loop() {
         break;
       case 66: // 7 - Water Pump
         if(!buttonStates[7]){
+          buttonStates[7] = true;
           turnOffLightsAndFans();
           digitalWrite(M1_WaterPumpPin, HIGH);
-          buttonStates[7] = true;
         } else {
-          digitalWrite(M1_FanPin, LOW);
-          turnOnLightsAndFansBasedOnButtonStates();
           buttonStates[7] = false;
+          turnOnLightsAndFansBasedOnButtonStates();
+          digitalWrite(M1_FanPin, LOW);
         }
         break;
       
@@ -325,13 +329,13 @@ void loop() {
         break;
       case 82: // 8 - Pump
         if (!buttonStates[8]){
+          buttonStates[8] = true;
           turnOffLightsAndFans();
           digitalWrite(M2_WaterPumpPin, HIGH);
-          buttonStates[8] = true;
         } else {
-          digitalWrite(M2_FanPin, LOW);
-          turnOnLightsAndFansBasedOnButtonStates();
           buttonStates[8] = false;
+          turnOnLightsAndFansBasedOnButtonStates();
+          digitalWrite(M2_FanPin, LOW);
         }
         break;
       
@@ -368,6 +372,7 @@ void loop() {
         break;
       case 74: // 9 - Pump
         if (!buttonStates[9]){
+          Serial.println("TURN  PUMP ON");
           turnOffLightsAndFans();
           digitalWrite(M1_WaterPumpPin, HIGH);
           digitalWrite(M2_WaterPumpPin, HIGH);
@@ -375,6 +380,7 @@ void loop() {
           buttonStates[8] = true;
           buttonStates[9] = true;
         } else {
+          Serial.println("TURN  PUMP OFF");
           digitalWrite(M1_FanPin, LOW);
           digitalWrite(M2_FanPin, LOW);
           turnOnLightsAndFansBasedOnButtonStates();
@@ -387,9 +393,6 @@ void loop() {
     delay(100);  // wait a bit
     IrReceiver.resume();
   }
-
-  // Reset watchdog timer every loop
-  wdt_reset(); 
 }
 
 
